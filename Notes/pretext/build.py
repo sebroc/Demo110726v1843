@@ -160,6 +160,18 @@ def build():
     for chapter in (1, 2, 3):
         path = ROOT / f"Notes/Chap{chapter}/Chap{chapter}-lectures.tex"
         body = path.read_text().split(r"\begin{document}", 1)[1].rsplit(r"\end{document}", 1)[0]
+        # Keep interleaved equations and answer boxes together on the web.
+        def worked_solution(match):
+            steps = re.sub(r"(?<!\\)%[^\n]*", "", match[1])
+            steps = re.sub(r"\\answer\s*\[[^\]]*\]", lambda _: r"\answer", steps)
+            steps = replace_one_arg(steps, "answer", lambda matrix: "\n\n" + matrix + "\n\n")
+            return "\\answer{\n" + steps + "\n}\n"
+
+        body = re.sub(
+            r"(?ms)^% pretext: begin worked solution[ \t]*\n(.*?)^% pretext: end worked solution[ \t]*$",
+            worked_solution,
+            body,
+        )
         body = re.sub(r"(?<!\\)%[^\n]*", "", body)
         matches = list(STRUCT.finditer(body))
         lines = []
