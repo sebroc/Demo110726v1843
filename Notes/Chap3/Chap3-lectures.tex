@@ -1,4 +1,10 @@
 % !TeX program = lualatex
+\DocumentMetadata{
+  lang=en-US,
+  pdfstandard=ua-2,
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE}
+}
 \documentclass{article}
 \usepackage[14pt]{extsizes}
 
@@ -302,9 +308,7 @@ a_{m1} & a_{m2} & \cdots & a_{mn} & b_m
 	pdfsubject={Linear algebra and optimization},
 	pdfkeywords={linear algebra, lecture notes, mathematics},
 	pdfstartview=Fit,
-	pdfinfo={
-		Title={Math 345 - Chapter 3: Determinants (and Diagonalization)}
-	}
+	pdfdisplaydoctitle=true
 }
 % End embedded preamble-345.tex
 
@@ -358,9 +362,9 @@ Let's start with $2\times 2$: $A=\begin{bmatrix}a & b \\ c & d \end{bmatrix}$.
 
 We saw a result in the previous chapter that
 
-$$A^{-1}=\dfrac{1}{ad-bc}\begin{bmatrix}
+\[A^{-1}=\dfrac{1}{ad-bc}\begin{bmatrix}
 d & -b \\ -c & a
-\end{bmatrix}$$
+\end{bmatrix}\]
 
 When can this go wrong?
 
@@ -370,7 +374,7 @@ When can this go wrong?
 
 \definition The \fillin{determinant} of $A=\begin{bmatrix}a & b \\ c & d \end{bmatrix}$ is
 
-$$\det(A)=ad-bc.$$
+\[\det(A)=ad-bc.\]
 
 \medskip
 
@@ -401,8 +405,8 @@ In general, if $A$ is $n\times n$, then the $i,j^{\text{th}}$ minor of $A$ is th
 \newpage
 
 \activity Find $\minor(A)_{11}$ and $\minor(A)_{23}$ for 
-$$A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
-\end{bmatrix}$$
+\[A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
+\end{bmatrix}\]
 
 \answer{$\minor(A)_{11} = \det\begin{bmatrix} 3 & 2 \\ 2 & 1 \end{bmatrix} = 3(1) - 2(2) = -1$
 	
@@ -411,12 +415,12 @@ $$A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
 \bigskip
 
 \definition Let $A$ be a $n\times n$ matrix. The $(i,j)$-\fillin{cofactor} of $A$, denoted $\cof(A)_{ij}$, is the defined to be
-$$\cof(A)_{ij}=(-1)^{i+j}\minor(A)_{ij}$$
+\[\cof(A)_{ij}=(-1)^{i+j}\minor(A)_{ij}\]
 
 
 \activity Find $\cof(A)_{11}$ and  $\cof(A)_{23}$ for 
-$$A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
-\end{bmatrix}$$
+\[A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
+\end{bmatrix}\]
 
 \answer[2cm]{$\cof(A)_{11} = (-1)^{1+1}\minor(A)_{11} = (1)(-1) = -1$
 	
@@ -427,15 +431,15 @@ $$A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
 %\newpage
 
 \definition  Let $A$ be a $3\times 3$ matrix. Then the \fillin{determinant} of $A$, $\det(A)$, is calculated by picking a row (or column), taking the product of each entry of that row (column) with its cofactor, then adding these products together. In other words, if we pick row $i$, this process is called \fillin{expanding along the $i$-th row} and is given as
-$$\det(A)=a_{i1}\cof(A)_{i1}+a_{i2}\cof(A)_{i2}+a_{i3}\cof(A)_{i3}$$
+\[\det(A)=a_{i1}\cof(A)_{i1}+a_{i2}\cof(A)_{i2}+a_{i3}\cof(A)_{i3}\]
 
 This process is called \textbf{calculating the determinant by cofactor expansion}.
 
 \newpage
 %\bigskip
 
-\activity Find the determinant of $$A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
-\end{bmatrix}$$ by expanding along row 1. Also try expanding along column 2.
+\activity Find the determinant of \[A=\begin{bmatrix} 1 & 2 & 3\\ 4 & 3 & 2 \\ 3 & 2 & 1
+\end{bmatrix}\] by expanding along row 1. Also try expanding along column 2.
 
 \answer[16cm]{Using row 1:
 	$\det(A) = 1\cof(A)_{11} + 2\cof(A)_{12} + 3\cof(A)_{13}$
@@ -520,7 +524,7 @@ $A=\begin{bmatrix} 1 & 2 & 3 & 4 \\ 5 & 4 & 2 & 3\\ 1 & 3 & 4 & 5 \\ 3 & 4 & 3 &
 
 \definition  Let $A$ be a $n\times n$ matrix ($n\geq 3)$. Then the \fillin{determinant} of $A$, $\det(A)$, is
 
-$$\det(A)=\sum_{j=1}^n a_{ij}\cof(A)_{ij}=\sum_{i=1}^n a_{ij}\cof(A)_{ij}$$
+\[\det(A)=\sum_{j=1}^n a_{ij}\cof(A)_{ij}=\sum_{i=1}^n a_{ij}\cof(A)_{ij}\]
 
 for some choice of row $i$ or column $j$.
 

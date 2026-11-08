@@ -91,7 +91,18 @@ def convert_fragment(tex, blank_terms=None):
         names = {"p":"p", "strong":"alert", "b":"alert", "em":"em", "i":"em", "ul":"ul", "ol":"ol", "li":"li", "blockquote":"blockquote"}
         if n.name == "img":
             src = n.get("src", "")
-            return f'<image source="{html.escape(src, quote=True)}"/>'
+            if not src.endswith(".png"):
+                src += ".png"
+            source = html.escape(f"images/{src}", quote=True)
+            alt = n.get("alt", "").strip()
+            if alt:
+                description = html.escape(alt, quote=False)
+                return f'<image source="{source}"><shortdescription>{description}</shortdescription></image>'
+            return f'<image source="{source}"/>'
+        if n.name == "p" and n.parent.name == "figure":
+            contents = [child for child in n.children if isinstance(child, Tag) or child.strip()]
+            if len(contents) == 1 and isinstance(contents[0], Tag) and contents[0].name == "img":
+                return children
         if n.name == "a":
             reference = n.get("data-reference")
             if n.get("data-reference-type") == "ref" and reference:
@@ -232,11 +243,6 @@ def build():
     assets.mkdir(parents=True, exist_ok=True)
     for image in (ROOT / "Notes").glob("Chap*/*.png"):
         shutil.copy2(image, assets / image.name)
-    for chapter in (1, 2, 3):
-        file = SOURCE / f"chapter-{chapter}.ptx"
-        xml = file.read_text()
-        xml = re.sub(r'<image source="([^"]+)"/>', lambda m: f'<image source="images/{m.group(1) if m.group(1).endswith(".png") else m.group(1) + ".png"}"/>', xml)
-        file.write_text(xml)
 
 
 if __name__ == "__main__": build()

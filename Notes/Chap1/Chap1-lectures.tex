@@ -1,4 +1,10 @@
 % !TeX program = lualatex
+\DocumentMetadata{
+  lang=en-US,
+  pdfstandard=ua-2,
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE}
+}
 \documentclass{article}
 \usepackage[14pt]{extsizes}
 
@@ -16,7 +22,6 @@
 % Times-style fonts for both pdfLaTeX and LuaLaTeX/XeLaTeX.
 \usepackage{iftex}
 \usepackage{amsmath}
-\usepackage{enumerate}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage{tgtermes}
@@ -30,6 +35,12 @@
 \usepackage{fancyhdr}
 \usepackage{color}
 \usepackage{graphicx}
+% Keep figure tags next to their discussion in the reading order.
+% TeX Live 2026 otherwise collects floating figures at the end.
+\ExplSyntaxOn
+\bool_if_exist:NT \g__tag_float_sect_bool
+  { \bool_gset_false:N \g__tag_float_sect_bool }
+\ExplSyntaxOff
 \usepackage{pgf,tikz,pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows, shapes.geometric, matrix, turtle, plotmarks}
@@ -303,9 +314,7 @@ a_{m1} & a_{m2} & \cdots & a_{mn} & b_m
 	pdfsubject={Linear algebra and optimization},
 	pdfkeywords={linear algebra, lecture notes, mathematics},
 	pdfstartview=Fit,
-	pdfinfo={
-		Title={Math 345 - Chapter 1: Systems of Linear Equations}
-	}
+	pdfdisplaydoctitle=true
 }
 % End embedded Chapter 1 preamble.
 
@@ -369,7 +378,7 @@ y &= 10 \quad \text{badgers}
 \bigskip
 
 An equation of the form 
-$$ a_1 x_1 + a_2 x_2 + \cdots + a_n x_n = b $$
+\[ a_1 x_1 + a_2 x_2 + \cdots + a_n x_n = b \]
 is called a \fillin{linear equation}. The real quantities $a_1, \ldots, a_n, b$ are \fillin{constants}, while the variables $x_1, \ldots, x_n$ represent \fillin{unknowns}.
 
 %\bigskip
@@ -529,14 +538,14 @@ a_{m1} & a_{m2} & \cdots & \cdots & \cdots & a_{mn} \\
 
 We can also build a matrix that includes the constants on the right-hand side of the linear system. First, note that
 
-$$\mathbf{b}=\begin{bmatrix} b_1 \\ b_2 \\ \vdots \\ b_m\end{bmatrix}$$
+\[\mathbf{b}=\begin{bmatrix} b_1 \\ b_2 \\ \vdots \\ b_m\end{bmatrix}\]
 
 is a $m \times 1$ matrix (called the \fillin{constant matrix}) representing the constant terms of the linear equations (this is also called a \fillin{vector} or \fillin{column vector}). We can adjoin $\mathbf{b}$ to matrix $A$ to create the \fillin{augmented matrix} representing our linear system:
 
 
-$$ [A \dashline \bfb]=
+\[ [A \dashline \bfb]=
 \Amnb
-$$
+\]
 
 
 \bigskip
@@ -705,7 +714,8 @@ Notice that when we apply the elementary operations to the matrix, they change t
 \bigskip
 
 \definition An \fillin{elementary row operation} on a matrix $A$ is any one of the following operations: 
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
     \item Type I: \fillin{Interchange} any two rows.
     \item Type II: \fillin{Multiply} a row by a nonzero number. 
     \item Type III: \fillin{Add} a multiple of one row to another. 
@@ -791,7 +801,8 @@ Solution: $x = -5$, $y = 2$, $z = 4$.
 \bigskip
 
 \definition An $\mbyn$ matrix $A$ is in \fillin{row echelon form} (REF) if it satisfies the following properties: 
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
     \item All \fillin{zero rows}, if there are any, appear at the \fillin{bottom} of the matrix. 
     \item The \fillin{first nonzero entry} from the left of a nonzero row is a 1. This entry is called the \fillin{leading one} of its row. 
     \item For each nonzero row, the leading one appears to the \fillin{right and below} any leading ones in \fillin{preceding} rows. 
@@ -809,7 +820,7 @@ A matrix in REF appears as a staircase (or \fillin{echelon}) pattern of leading 
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=3in]{staircase}
+	\includegraphics[width=3in,alt={A five-row, seven-column matrix in row echelon form. The first four rows have leading ones in columns 2, 4, 5, and 7, respectively. Entries before each leading one are zero, entries after it are arbitrary, and the bottom row is all zeros.}]{staircase}
 	\caption{From Linear Algebra with Applications, Vretta-Lyryx}
 \end{figure}
 
@@ -898,9 +909,9 @@ zeros.
 
 \activity Find a row echelon form of the given matrix $A$. 
 
-$$
+\[
 A = \barray{rrrr}{0 & 0 & 1 & 2 \\ 3 & 3 & 6 & -9 \\ 2 & 3 & 0 & -2}
-$$
+\]
 
 \answer[14cm]{
 First nonzero column is column 1. Interchange rows 1 and 2:
@@ -941,11 +952,11 @@ by transforming the associated matrix $[A \dashline \bfb]$ to row echelon form.
 
 \answer[23.5cm]{
 Augmented matrix:
-$$ \left[ \begin{array}{rrr|r} 
+\[ \left[ \begin{array}{rrr|r} 
 	1 & 2 & 3 & 9 \\
 	2 & -1 & 1 & 8 \\
 	3 & 0 & -1 & 3
-\end{array} \right] $$
+\end{array} \right] \]
 
 Subtract 2 times row 1 from row 2 and
 %$$ \left[ \begin{array}{rrr|r}
@@ -955,32 +966,32 @@ Subtract 2 times row 1 from row 2 and
 %\end{array} \right] $$
 %
 subtract 3 times row 1 from row 3:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 2 & 3 & 9 \\
 	0 & -5 & -5 & -10 \\
 	0 & -6 & -10 & -24
-\end{array} \right] $$
+\end{array} \right] \]
 
 Multiply row 2 by -1/5:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 2 & 3 & 9 \\
 	0 & 1 & 1 & 2 \\
 	0 & -6 & -10 & -24
-\end{array} \right] $$
+\end{array} \right] \]
 
 Add 6 times row 2 to row 3:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 2 & 3 & 9 \\
 	0 & 1 & 1 & 2 \\
 	0 & 0 & -4 & -12
-\end{array} \right] $$
+\end{array} \right] \]
 
 Multiply row 3 by -1/4:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 2 & 3 & 9 \\
 	0 & 1 & 1 & 2 \\
 	0 & 0 & 1 & 3
-\end{array} \right] $$
+\end{array} \right] \]
 
 Back substitute:
 From row 3: $z = 3$
@@ -1004,25 +1015,25 @@ by transforming the associated matrix $[A \dashline \bfb]$ to row echelon form.
 
 \answer[17cm]{
 Augmented matrix:
-$$ \left[\begin{array}{rrr|r}
+\[ \left[\begin{array}{rrr|r}
     1 & 1 & -1 & 2 \\
     2 & 1 & -1 & 3 \\
     1 & 2 & 1 & 6
-\end{array}\right] $$
+\end{array}\right] \]
 
 Subtract 2 times row 1 from row 2 and subtract row 1 from row 3:
-$$ \left[\begin{array}{rrr|r}
+\[ \left[\begin{array}{rrr|r}
     1 & 1 & -1 & 2 \\
     0 & -1 & 1 & -1 \\
     0 & 1 & 2 & 4
-\end{array}\right] $$
+\end{array}\right] \]
 
 Add row 2 to row 3:
-$$ \left[\begin{array}{rrr|r}
+\[ \left[\begin{array}{rrr|r}
     1 & 1 & -1 & 2 \\
     0 & -1 & 1 & -1 \\
     0 & 0 & 3 & 3
-\end{array}\right] $$
+\end{array}\right] \]
 
 Back substitute:
 From row 3: $3z = 3$ gives $z = 1$.
@@ -1038,25 +1049,25 @@ Solution is $x=1$, $y=2$, $z=1$.
 
 \answer[16cm]{
 Start with its row echelon matrix:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 2 & 3 & 9 \\
 	0 & 1 & 1 & 2 \\
 	0 & 0 & 1 & 3
-\end{array} \right] $$
+\end{array} \right] \]
 
 Subtract 2 times row 2 from row 1:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 0 & 1 & 5 \\
 	0 & 1 & 1 & 2 \\
 	0 & 0 & 1 & 3
-\end{array} \right] $$
+\end{array} \right] \]
 
 Subtract row 3 from row 1, and subtract row 3 from row 2:
-$$ \left[ \begin{array}{rrr|r}
+\[ \left[ \begin{array}{rrr|r}
 	1 & 0 & 0 & 2 \\
 	0 & 1 & 0 & -1 \\
 	0 & 0 & 1 & 3
-\end{array} \right] $$
+\end{array} \right] \]
 
 Matrix now in RREF. Reading off solution:
 $x = 2$, $y = -1$, $z = 3$
@@ -1162,11 +1173,11 @@ Therefore system is inconsistent---no solutions exist
 
 Row echelon matrices are not unique for a given starting matrix. For example,
 
-$$
+\[
 \barray{rrr}{1 & 3 & 9 \\ 0 & 1 & -6 \\ 0& 0 & 1}
 \qquad \text{and} \qquad
 \barray{rrr}{1 & 3 & 9 \\ 0 & 1 & 0 \\ 0& 0 & 1}
-$$ 
+\] 
 
 are row equivalent row echelon matrices, but they are not equal.  However, the number of leading 1s will be the same in each row equivalent row echelon matrices.
 
@@ -1184,18 +1195,18 @@ $
 
 \answer[10cm]{
 Subtract 2 times row 1 from row 3:
-$$ \left[ \begin{array}{cccc}
+\[ \left[ \begin{array}{cccc}
 	1 & 1 & 2 & 7 \\
 	0 & 1 & 0 & 3 \\
 	0 & -1 & 0 & -3
-\end{array} \right] $$
+\end{array} \right] \]
 
 Add row 2 to row 3:
-$$ \left[ \begin{array}{cccc}
+\[ \left[ \begin{array}{cccc}
 	1 & 1 & 2 & 7 \\
 	0 & 1 & 0 & 3 \\
 	0 & 0 & 0 & 0
-\end{array} \right] $$
+\end{array} \right] \]
 
 Matrix is now in REF with 2 leading 1s.
 Therefore rank = 2.
@@ -1211,25 +1222,25 @@ Therefore rank = 2.
 
 \answer[14cm]{
 Subtract 2 times row 1 from row 3:
-$$ \left[ \begin{array}{cccc}
+\[ \left[ \begin{array}{cccc}
 	1 & 0 & 1 & 2 \\
 	0 & 1 & 0 & 3 \\
 	0 & 1 & 0 & -5
-\end{array} \right] $$
+\end{array} \right] \]
 
 Subtract row 2 from row 3:
-$$ \left[ \begin{array}{cccc}
+\[ \left[ \begin{array}{cccc}
 	1 & 0 & 1 & 2 \\
 	0 & 1 & 0 & 3 \\
 	0 & 0 & 0 & -8
-\end{array} \right] $$
+\end{array} \right] \]
 
 Multiply row 3 by (-1/8):
-$$ \left[ \begin{array}{cccc}
+\[ \left[ \begin{array}{cccc}
 	1 & 0 & 1 & 2 \\
 	0 & 1 & 0 & 3 \\
 	0 & 0 & 0 & 1
-\end{array} \right] $$
+\end{array} \right] \]
 
 Matrix is now in REF with 3 leading ones.
 Therefore rank = 3.
@@ -1384,8 +1395,8 @@ We reviewed the following definition earlier in the course.
 \bigskip
 
 \definition Let $\mathbf{x},\mathbf{y}$ be column matrices (or vectors or column vectors) with same number of entries (i.e. have $m$ rows, 1 column), and $k$ a scalar/real number. We define the \fillin{sum} $\mathbf{x}+\mathbf{y}$ by adding their respective entries and the \fillin{scalar product} $k\mathbf{x}$ by multiplying each entry of $\mathbf{x}$ by $k$. In other words,  
-$$\text{If}\; \mathbf{x}=\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\x_n\end{bmatrix}, \mathbf{y}=\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\y_n\end{bmatrix}, \text{then} \;  \mathbf{x}+ \mathbf{y}=\begin{bmatrix} x_1+y_1 \\ x_2+y_2 \\ \vdots \\x_n+y_n\end{bmatrix} \text{and} \; k\mathbf{x}=\begin{bmatrix} kx_1 \\ kx_2 \\ \vdots \\kx_n\end{bmatrix}.$$
-A sum of scalar multiples of several column matrices is called a \fillin{linear combination} of the column matrices. For example, if $\mathbf{x}, \mathbf{y}, \mathbf{z}$ are column matrices, then for any choice of scalars $r,s,t$, $$r\mathbf{x}+s\mathbf{y}+t\mathbf{z}$$ is a linear combination of $\mathbf{x}, \mathbf{y}$ and $\mathbf{z}$.
+\[\text{If}\; \mathbf{x}=\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\x_n\end{bmatrix}, \mathbf{y}=\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\y_n\end{bmatrix}, \text{then} \;  \mathbf{x}+ \mathbf{y}=\begin{bmatrix} x_1+y_1 \\ x_2+y_2 \\ \vdots \\x_n+y_n\end{bmatrix} \text{and} \; k\mathbf{x}=\begin{bmatrix} kx_1 \\ kx_2 \\ \vdots \\kx_n\end{bmatrix}.\]
+A sum of scalar multiples of several column matrices is called a \fillin{linear combination} of the column matrices. For example, if $\mathbf{x}, \mathbf{y}, \mathbf{z}$ are column matrices, then for any choice of scalars $r,s,t$, \[r\mathbf{x}+s\mathbf{y}+t\mathbf{z}\] is a linear combination of $\mathbf{x}, \mathbf{y}$ and $\mathbf{z}$.
 
 
 \bigskip

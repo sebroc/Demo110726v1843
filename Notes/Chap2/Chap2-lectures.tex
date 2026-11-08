@@ -1,4 +1,10 @@
 % !TeX program = lualatex
+\DocumentMetadata{
+  lang=en-US,
+  pdfstandard=ua-2,
+  tagging=on,
+  tagging-setup={math/setup=mathml-SE}
+}
 \documentclass{article}
 \usepackage[14pt]{extsizes}
 
@@ -16,7 +22,6 @@
 % Times-style fonts for both pdfLaTeX and LuaLaTeX/XeLaTeX.
 \usepackage{iftex}
 \usepackage{amsmath}
-\usepackage{enumerate}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage{tgtermes}
@@ -30,6 +35,12 @@
 \usepackage{fancyhdr}
 \usepackage{color}
 \usepackage{graphicx}
+% Keep figure tags next to their discussion in the reading order.
+% TeX Live 2026 otherwise collects floating figures at the end.
+\ExplSyntaxOn
+\bool_if_exist:NT \g__tag_float_sect_bool
+  { \bool_gset_false:N \g__tag_float_sect_bool }
+\ExplSyntaxOff
 \usepackage{pgf,tikz,pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows, shapes.geometric, matrix, turtle, plotmarks}
@@ -305,9 +316,7 @@ a_{m1} & a_{m2} & \cdots & a_{mn} & b_m
 	pdfsubject={Linear algebra and optimization},
 	pdfkeywords={linear algebra, lecture notes, mathematics},
 	pdfstartview=Fit,
-	pdfinfo={
-		Title={Math 345 - Chapter 2: Matrix Algebra}
-	}
+	pdfdisplaydoctitle=true
 }
 % End embedded preamble-345.tex
 
@@ -452,9 +461,9 @@ B = \begin{bmatrix}
 \]
 
 \answer[2cm]{
-	$$
+	\[
 	A+B = \begin{bmatrix} 1 & 4 & 4\\ 6 & -5 & -17\end{bmatrix}
-	$$}
+	\]}
 \bigskip
 
 \note For $A+B$ to be defined, $A$ and $B$ must be the same size. From now on, if we write $A+B$, assume that this is the case. 
@@ -508,7 +517,8 @@ $
 
 \topic{Matrix Addition Properties}
 Let $A$, $B$, and $C$ be $\mbyn$ matrices. 
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
     \item $A+B = $ \fillin{$A + B$}, i.e. matrix addition is \fillin{commutative}.
     \item $A + (B + C) =$ \fillin{$(A + B) + C$}, i.e. matrix addition is \fillin{associative}.
     \item There is a unique $\mbyn$ matrix $O$ such that $A+O = $\fillin{$A$} for any $\mbyn$ matrix $A$. The matrix $O$ is called the $\mbyn$ \fillin{zero matrix}.  
@@ -531,7 +541,8 @@ Let $A$, $B$, and $C$ be $\mbyn$ matrices.
 \newpage
 
 \topic{Scalar Multiplication Properties} If $r$ and $s$ are real numbers and $A$ and $B$ are matrices of the appropriate sizes, then 
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
     \item $r(sA)=$\fillin{$(rs) A$}.
     \item $(r+s)A=$\fillin{$rA + sA$}. 
     \item $r(A+B)=$\fillin{$rA + rB$}. 
@@ -539,7 +550,7 @@ Let $A$, $B$, and $C$ be $\mbyn$ matrices.
 
 
 \definition If $A = [\aij]$ is an $\mbyn$ matrix, then the \fillin{transpose} of $A$, denoted \\$A^T = [\aij^T]$, is the \fillin{$n$} $\times$ \fillin{$m$} matrix defined by 
-$$\aij^T = a_{ji}$$ 
+\[\aij^T = a_{ji}\] 
 In other words, the transpose of $A$ is obtained by \fillin{interchanging} the rows and the columns of $A$.
 
 \bigskip 
@@ -582,7 +593,7 @@ If $A=[a_{ij}]$ is an $m\times n$ matrix, the elements
 $a_{11}, a_{22}, a_{33},\ldots $ are called the main diagonal of $A$. 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=6in]{diagonal}
+	\includegraphics[width=6in,alt={The main diagonal is circled in four matrices. In the 3 by 2 and 2 by 3 matrices it contains a sub 11 and a sub 22. In the 3 by 3 matrix it also contains a sub 33. In the 2 by 1 matrix it contains only a sub 11.}]{diagonal}
 	\caption{From Linear Algebra with Applications, Vretta-Lyryx}
 \end{figure}
 
@@ -596,7 +607,8 @@ Thus forming the transpose of a matrix $A$ can be viewed as \fillin{flipping} $A
 
 \topic{Matrix Transpose Properties} 
 If $r$ is a scalar and $A$ and $B$ are matrices of the appropriate sizes, then 
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
     \item $(A^T)^T =$\fillin{$A$}
     \item $(A + B)^T=$\fillin{$A^T + B^T$}
     \item $(rA)^T=$\fillin{$rA^T$}
@@ -628,7 +640,8 @@ If $r$ is a scalar and $A$ and $B$ are matrices of the appropriate sizes, then
 \end{itemize}
 
 \answer[14cm]{Let's examine each matrix:
-	\begin{enumerate}[(a)]
+	\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
 		\item $A = \begin{bmatrix} 0 & 2 & -3 \\ -2 & 0 & 5 \\ 3 & -5 & 0 \end{bmatrix}$
 		skew symmetric since $A^T = -A$
 		
@@ -694,7 +707,7 @@ Rewrite this system using a linear combination.
 \definition Let $A=\begin{bmatrix}\mathbf{a}_1 & \mathbf{a}_2 &\cdots & \mathbf{a}_n\end{bmatrix}$ be an $m\times n$ matrix, written in terms of its columns $\mathbf{a}_1, \mathbf{a}_2, \ldots, \mathbf{a}_n.$ If $\mathbf{x}=\begin{bmatrix} x_1 \\ x_2 \\ \vdots \\ x_n\end{bmatrix}$ is any $n$-vector, the \fillin{matrix-vector product} $A\mathbf{x}$ is defined to be
 the $m$-vector given by:
 
-$$A\mathbf{x}=x_1\mathbf{a}_1+x_2\mathbf{a}_2+\cdots x_n\mathbf{a}_n.$$
+\[A\mathbf{x}=x_1\mathbf{a}_1+x_2\mathbf{a}_2+\cdots x_n\mathbf{a}_n.\]
  
 
 \activity Compute the matrix-vector product $A\bfx$ where
@@ -892,7 +905,7 @@ We can express Matrix-Vector multiplication using dot products.
 \definition If $(a_1, a_2, . . . , a_n)$ and $(b_1, b_2, . . . , b_n)$ are two ordered $n$-tuples, their \\ 
 \fillin{dot product} is defined to be the number 
 
-$$a_1b_1+a_2b_2+\cdots a_nb_n$$
+\[a_1b_1+a_2b_2+\cdots a_nb_n\]
 
 obtained by multiplying corresponding entries and adding the results.
 
@@ -914,7 +927,7 @@ obtained by multiplying corresponding entries and adding the results.
 \theorem Let $A$ be an $m\times n$ matrix and let $\mathbf{x}$ be an $n$-vector. Then each entry of the vector $A\mathbf{x}$ is the dot product of the corresponding row of $A$ with $\bfx$.
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=3in]{Ax-dotproduct}
+	\includegraphics[width=3in,alt={Row i of matrix A is paired with the column vector x. Their dot product gives entry i of A times x.}]{Ax-dotproduct}
 	\caption{From Linear Algebra with Applications, Vretta-Lyryx}
 \end{figure}
 
@@ -959,7 +972,7 @@ A = \barray{rrr}{
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=6in]{identity}
+	\includegraphics[width=6in,alt={The 2 by 2, 3 by 3, and 4 by 4 identity matrices each have ones from upper left to lower right and zeros everywhere else.}]{identity}
 	\caption{From Linear Algebra with Applications, Vretta-Lyryx}
 \end{figure}
 
@@ -986,14 +999,14 @@ A = \barray{rrr}{
 \definition Consider $\mathbb{R}^n$, and let $\mathbf{e}_j$ denote the $j$th column of $I_n$, i.e, 
 
 
-$$\mathbf{e}_j= \shortanswer{
+\[\mathbf{e}_j= \shortanswer{
 	\begin{bmatrix}
 		t_1 \\
 		t_2 \\
 		\vdots \\
 		t_n
 	\end{bmatrix}
-	\text{ where } t_j = 1, \text{ but } t_i = 0 \text{ for all } i \neq j.}$$
+	\text{ where } t_j = 1, \text{ but } t_i = 0 \text{ for all } i \neq j.}\]
 
 
 These vectors are called the \fillin{standard basis vectors} for $\mathbb{R}^n$ (this name will make sense later).
@@ -1058,12 +1071,12 @@ Similarly, we can define 3-vectors in space.
 
 \begin{minipage}{.45\textwidth}
 \begin{center}
-\includegraphics[scale=.85]{geom2vector.png}
+\includegraphics[scale=.85,alt={An arrow from the origin to the point with coordinates a sub 1 and a sub 2. Dashed lines from the tip meet the horizontal and vertical axes at those coordinates.}]{geom2vector.png}
 \end{center}
 \end{minipage}
 \begin{minipage}{.45\textwidth}
     \begin{center}
-\includegraphics[scale=.8]{geom3vector.png}
+\includegraphics[scale=.8,alt={An arrow from the origin to the point with coordinates a sub 1, a sub 2, and a sub 3. Dashed guides show its position relative to the three coordinate axes.}]{geom3vector.png}
 \end{center}
 \end{minipage}
 
@@ -1109,7 +1122,7 @@ What's the image of $\begin{bmatrix} 3 \\ -2 \\4\end{bmatrix}$ under $T$?
 
 \definition Given an $m\times n$ matrix $A$, multiplication by $A$ gives a transformation \\ $T_A:\mathbb{R}^n\to\mathbb{R}^m$ by
 
-$$T_A(\mathbf{x})=A\mathbf{x}$$
+\[T_A(\mathbf{x})=A\mathbf{x}\]
 
 for each $\mathbf{x}$ in $\mathbb{R}^n$. $T_A$ is called the \fillin{matrix transformation induced by} $A$.
 
@@ -1147,9 +1160,9 @@ $T\left(\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}\right)=\begin{bmatrix} x_1 +x_2
 
 \sectiontitle{2.3}{Matrix Multiplication}
 
-\definition Let $A$ be an $m\times n$ matrix, $B$ be an $n\times k$ matrix, and write $$B=\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 &\cdots & \mathbf{b}_k\end{bmatrix}$$ where $\mathbf{b}_j$ is column $j$ of $B$. The \fillin{product} matrix $AB$ is the $m\times k$ matrix defined as follows:
+\definition Let $A$ be an $m\times n$ matrix, $B$ be an $n\times k$ matrix, and write \[B=\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 &\cdots & \mathbf{b}_k\end{bmatrix}\] where $\mathbf{b}_j$ is column $j$ of $B$. The \fillin{product} matrix $AB$ is the $m\times k$ matrix defined as follows:
 
-$$AB=A\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 &\cdots & \mathbf{b}_k\end{bmatrix}=\begin{bmatrix}A\mathbf{b}_1 & A\mathbf{b}_2 &\cdots & A\mathbf{b}_k\end{bmatrix}.$$
+\[AB=A\begin{bmatrix}\mathbf{b}_1 & \mathbf{b}_2 &\cdots & \mathbf{b}_k\end{bmatrix}=\begin{bmatrix}A\mathbf{b}_1 & A\mathbf{b}_2 &\cdots & A\mathbf{b}_k\end{bmatrix}.\]
 
 in other words, column $j$ of $AB$ is the matrix-vector product $A\mathbf{b}_j$ of $A$ and the corresponding column $\mathbf{b}_j$ of $B$.
 
@@ -1189,7 +1202,7 @@ Compute $AB$.
 
 \activity Let $A$ be $m\times n$ and $B$ be $n\times k$, and build the induced matrix representations $T_A:\mathbb{R}^n\to \mathbb{R}^m$, and $T_B:\mathbb{R}^k\to\mathbb{R}^n$, and consider the composite of $T_A$ and $T_B$:
 
-$$(T_A\circ T_B):\mathbb{R}^k\to \mathbb{R}^m\; \text{via}\; (T_A\circ T_B)\mathbf{x}=T_A(T_B(\mathbf{x})).$$ 
+\[(T_A\circ T_B):\mathbb{R}^k\to \mathbb{R}^m\; \text{via}\; (T_A\circ T_B)\mathbf{x}=T_A(T_B(\mathbf{x})).\] 
 
 Compute $(T_A\circ T_B)\mathbf{x}$.
 
@@ -1251,7 +1264,7 @@ where $c_{ij} = \sum_{\ell=1}^{n} a_{i\ell} b_{\ell,j}$.
 
 \begin{figure}[!h]
 	\centering
-	\includegraphics[width=4in]{AB-dotproduct}
+	\includegraphics[width=4in,alt={The dot product of row i of A and column j of B gives the entry at row i, column j of the product AB.}]{AB-dotproduct}
 	\caption{From Linear Algebra with Applications, Vretta-Lyryx}
 \end{figure}
 
@@ -1286,7 +1299,8 @@ What is the $(2,3)$ entry of $AB$?
 \bigskip
 
 \topic{Properties of Matrix Multiplication} Assume that $A,B,C$ are matrices of appropriate sizes. Then:
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
 	\item $A(BC)=\fillin{(AB)C}$, i.e. matrix multiplication is \fillin{associative}. 
 	\item $(A+B)C=\fillin{AC + BC}$. 
 	\item $C(A+B)=\fillin{CA + CB}$. 
@@ -1420,7 +1434,8 @@ What makes a transformation a matrix transformation?
 
 
 \definition A transformation $T:\mathbb{R}^n\to\mathbb{R}^m$ is a \fillin{linear transformation} if
-\begin{enumerate}[(a)]
+\begin{enumerate}
+\renewcommand{\labelenumi}{(\alph{enumi})}
     \item $T(\bfx + \bfy) = \fillin{T(\bfx) + T(\bfy)}$ for every $\bfx, \bfy \in \mathbb{R}^n$.
     \item $T(c\bfx)=\fillin{c T(\bfx)}$ for every $\bfx \in \mathbb{R}^n$ and $c \in \bbR$.
     \end{enumerate}
@@ -1459,7 +1474,7 @@ $T(-\mathbf{x})$?
 
 Recall: A vector $\bfy\in\mathbb{R}^n$ is a \fillin{linear combination} of vectors $\bfx_1, \bfx_2,\ldots \bfx_k$ if there are scalars $a_1, a_2, \ldots, a_k$ such that
 
-$$\bfy=a_1\bfx_1+a_2\bfx_2+\cdots a_k\bfx_k.$$
+\[\bfy=a_1\bfx_1+a_2\bfx_2+\cdots a_k\bfx_k.\]
 
 \bigskip
 
@@ -1506,7 +1521,7 @@ $T(a_1\bfx_1+a_2\bfx_2+\cdots a_k\bfx_k)= \fillin{a_1T(\mathbf{x}_1) + a_2T(\mat
     \item[1.] $T$ is a linear transformation if and only if it is a matrix transformation.
     \item[2.] In this case, $T=T_A$ is the matrix transformation induced by the unique matrix $A$, given in terms of its columns by 
 
-    $$A=\begin{bmatrix} T(\mathbf{e}_1) & T(\mathbf{e}_2) & \cdots & T(\mathbf{e}_n) \end{bmatrix},$$
+    \[A=\begin{bmatrix} T(\mathbf{e}_1) & T(\mathbf{e}_2) & \cdots & T(\mathbf{e}_n) \end{bmatrix},\]
     where $\mathbf{e}_1,\mathbf{e}_2, \ldots \mathbf{e}_n$ are the standard basis vectors of $\mathbb{R}^n$.
 \end{itemize}
 \emph{Proof (if time):}
@@ -1565,7 +1580,7 @@ The following figure provides a visualization
 of this transformation.
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.66\textwidth]{math-51-fig-13-4-1.png}
+	\includegraphics[width=0.66\textwidth,alt={The origin stays fixed. The first basis vector maps three units right and one up. The second maps one and a half units right and two up. The images of the basis vectors give the directions of the two families of parallel lines in the transformed grid.}]{math-51-fig-13-4-1.png}
 	\caption{The distorted (aqua) grid obtained by applying the linear transformation $\mathbf{f}(\mathbf{x}) = T(\mathbf{x})$ to a (gray) square grid. From: Stanford's MATH 51 textbook}
 	\label{fig:linear-transformation-grid}
 \end{figure}
@@ -1701,24 +1716,24 @@ Follow up facts:
 \end{itemize}
 
 
-\theorem (Inverse of $2\times 2$ matrix) The $2\times 2$ matrix $$A=\begin{bmatrix}
+\theorem (Inverse of $2\times 2$ matrix) The $2\times 2$ matrix \[A=\begin{bmatrix}
 	a & b \\ c & d
-\end{bmatrix}$$
+\end{bmatrix}\]
 is invertible if and only if $ad-bc\neq 0$, in which case
 
-$$A^{-1}=\dfrac{1}{ad-bc}\begin{bmatrix}
+\[A^{-1}=\dfrac{1}{ad-bc}\begin{bmatrix}
 	d & -b \\ -c & a
-\end{bmatrix}$$
+\end{bmatrix}\]
 
 We'll learn how to compute inverses for bigger matrices soon.
 
 \activity Find the inverse of each matrix, if possible.
 
-$$A=\begin{bmatrix}
+\[A=\begin{bmatrix}
 	-2 & -3 \\ 4 & 6
 \end{bmatrix},\; B=\begin{bmatrix}
 	1 & 6 \\ 2 & 3
-\end{bmatrix} $$
+\end{bmatrix} \]
 
 \answer{
 	For $A$: $\det(A) = (-2)(6) - (-3)(4) = -12 - (-12) = 0$, so $A$ is not invertible.
@@ -1879,7 +1894,7 @@ $T'\circ T(\mathbf{x})=\shortanswer{T_{A^{-1}}(T_A(\mathbf{x})) = T_{A^{-1}}(A\m
 $A$ is invertible if and only if $T$ has an inverse.
 In this case, $T$ has exactly one inverse (which we denote as $T^{-1}$), and $T^{-1} : \mathbb{R}^n\to\mathbb{R}^n$ is the
 transformation induced by the matrix $A^{-1}$. In other words
-$$(T_A)^{-1} = T_{A^{-1}}$$
+\[(T_A)^{-1} = T_{A^{-1}}\]
 
 $T$ and $T^{-1}$ ``reverse'' or ``undo'' the action of each other.
 
