@@ -1,0 +1,10 @@
+/* Keep the underline on the label when Safari gives summary a full-width box. */
+details.solution > summary.knowl__link {
+    border-bottom: 0;
+    text-decoration: underline dotted;
+    text-underline-offset: 0.2em;
+}
+
+details.solution > summary.knowl__link:is(:hover, :focus) {
+    text-decoration-color: transparent;
+}
