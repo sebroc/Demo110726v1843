@@ -151,7 +151,6 @@
 
 \newcommand\notice{\textit{Notice:} }
 \newcommand\question{\textbf{Question:} }
-\newcommand\proof{\textbf{Why is it true?} }
 \newcommand\setup{\textit{Set-up:} }
 \newcommand\idea{\textit{Idea:} }
 \newcommand\warning{\textbf{Warning:} }
@@ -574,13 +573,13 @@ for some choice of row $i$ or column $j$.
 
 \theorem If a row (column) of $A$ consists entirely of zeros, then $\det(A)=0$.
 
-\proof
+\textbf{Why is it true?}
 
 \answer[1cm]{See Activity~\ref{activity-determinant-zero-row}.}
 
 \theorem If $B$ results from $A$ by interchanging two different rows (or two different columns), then $\det(B)=-\det(A)$.
 
-\proof
+\textbf{Why is it true?}
 
 \answer{Check for $2 \times 2$: $A=\begin{bmatrix}a & b \\ c & d \end{bmatrix}$ and $\det(A)=ad-bc.$ OTOH, $B=\begin{bmatrix}c & d \\ a & b \end{bmatrix}$ and $\det(B)= cb - ad = -(ad-bc).$ 
 }
@@ -589,7 +588,7 @@ for some choice of row $i$ or column $j$.
 
 \theorem If two rows (columns) of $A$ are equal,then $\det(A)=0$.
 
-\proof
+\textbf{Why is it true?}
 
 \answer{Let $B$ be the matrix obtained by interchanging these two equal rows. Then $B=A$ (since the rows were equal) but also $\det(B)=-\det(A)$ (by the previous theorem about row interchanges). Therefore:
 	$\det(A) = \det(B) = -\det(A)$.
@@ -599,7 +598,7 @@ for some choice of row $i$ or column $j$.
 
 \theorem If $B$ is obtained from $A$ by multiplying a row (column) of $A$ by a real number $k$, then $\det(B)=k\det(A)$.
 
-\proof
+\textbf{Why is it true?}
 
 \answer[5cm]{Suppose row $i$ is multiplied by $k$. Expand along that row
 \begin{align*}
