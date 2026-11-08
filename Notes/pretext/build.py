@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent
 SOURCE = OUT / "source"
 STRUCT = re.compile(r"\\(chaptertitle|sectiontitle|activity|theorem|definition|fact|note|remark|corollary|lemma)\b")
+ACTIVITY_END = "% pretext: end activity"
 
 
 def braced(s, pos):
@@ -87,7 +88,7 @@ def convert_fragment(tex, blank_terms=None):
             math = math[2:-2] if math.startswith((r"\(", r"\[")) else math
             return f"<{'me' if display else 'm'}>{replace_blanks(html.escape(math, quote=False), math=True)}</{'me' if display else 'm'}>"
         children = "".join(node(c) for c in n.children)
-        names = {"p":"p", "strong":"b", "b":"b", "em":"em", "i":"em", "ul":"ul", "ol":"ol", "li":"li", "blockquote":"blockquote"}
+        names = {"p":"p", "strong":"alert", "b":"alert", "em":"em", "i":"em", "ul":"ul", "ol":"ol", "li":"li", "blockquote":"blockquote"}
         if n.name == "img":
             src = n.get("src", "")
             return f'<image source="{html.escape(src, quote=True)}"/>'
@@ -172,7 +173,11 @@ def build():
             worked_solution,
             body,
         )
-        body = re.sub(r"(?<!\\)%[^\n]*", "", body)
+        body = re.sub(
+            r"(?<!\\)%[^\n]*",
+            lambda match: ACTIVITY_END if match[0].rstrip() == ACTIVITY_END else "",
+            body,
+        )
         matches = list(STRUCT.finditer(body))
         lines = []
         opened = None
@@ -203,8 +208,12 @@ def build():
                 if label: chunk = chunk[label.end():]
                 tag = kind if kind in ("activity", "theorem", "definition", "remark", "corollary", "lemma") else "remark"
                 if kind == "activity":
+                    chunk, _, following = chunk.partition(ACTIVITY_END)
                     lines.append(f'<activity xml:id="{html.escape(label.group(1) if label else f"ch{chapter}-activity-{count}")}">')
                     content(lines, chunk, activity=True)
+                    lines.append("</activity>")
+                    content(lines, following)
+                    continue
                 else:
                     lines.append(f'<{tag} xml:id="ch{chapter}-item-{count}"><statement>')
                     content(lines, chunk)
