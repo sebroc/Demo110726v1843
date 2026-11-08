@@ -92,7 +92,11 @@ def convert_fragment(tex, blank_terms=None):
         if n.name == "img":
             src = n.get("src", "")
             return f'<image source="{html.escape(src, quote=True)}"/>'
-        if n.name == "a": return f'<url href="{html.escape(n.get("href", ""), quote=True)}">{children}</url>'
+        if n.name == "a":
+            reference = n.get("data-reference")
+            if n.get("data-reference-type") == "ref" and reference:
+                return f'<xref ref="{html.escape(reference, quote=True)}" text="global"/>'
+            return f'<url href="{html.escape(n.get("href", ""), quote=True)}">{children}</url>'
         if n.name in names: return f"<{names[n.name]}>{children}</{names[n.name]}>"
         if n.name == "br": return " "
         return children
