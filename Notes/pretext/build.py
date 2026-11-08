@@ -62,20 +62,31 @@ def prepare(s):
     return s
 
 
-def convert_fragment(tex):
+def convert_fragment(tex, blank_terms=None):
     tex = prepare(tex).strip()
     if not tex: return ""
     output = subprocess.run(["pandoc", "-f", "latex", "-t", "html", "--mathjax"], input=tex, text=True, capture_output=True, check=True).stdout
     soup = BeautifulSoup(output, "html.parser")
+    blank = r"\underline{\phantom{0000}}"
+    def replace_blanks(value, math=False):
+        if blank_terms is None:
+            return value
+        def replace(match):
+            index = int(match[1])
+            if math:
+                blank_terms[index] = "$" + blank_terms[index] + "$"
+            return blank if math else f"<m>{blank}</m>"
+        return re.sub(r"PTXActivityBlank(\d+)End", replace, value)
+
     def node(n):
-        if isinstance(n, NavigableString): return html.escape(str(n), quote=False)
+        if isinstance(n, NavigableString): return replace_blanks(html.escape(str(n), quote=False))
         if not isinstance(n, Tag): return ""
-        children = "".join(node(c) for c in n.children)
         if n.name == "span" and "math" in n.get("class", []):
             display = "display" in n.get("class", [])
             math = n.get_text()
             math = math[2:-2] if math.startswith((r"\(", r"\[")) else math
-            return f"<{'me' if display else 'm'}>{html.escape(math, quote=False)}</{'me' if display else 'm'}>"
+            return f"<{'me' if display else 'm'}>{replace_blanks(html.escape(math, quote=False), math=True)}</{'me' if display else 'm'}>"
+        children = "".join(node(c) for c in n.children)
         names = {"p":"p", "strong":"b", "b":"b", "em":"em", "i":"em", "ul":"ul", "ol":"ol", "li":"li", "blockquote":"blockquote"}
         if n.name == "img":
             src = n.get("src", "")
@@ -107,19 +118,26 @@ def extract_answers(s):
 
 def content(parent, tex, activity=False):
     statement, answers = extract_answers(tex)
-    rendered = convert_fragment(statement)
     if activity:
+        terms = []
+        pattern = re.compile(r"\\(?:fillin|underline|shortanswer)\s*\{")
+        pos = 0
+        while match := pattern.search(statement, pos):
+            term, end = braced(statement, match.end() - 1)
+            marker = f"PTXActivityBlank{len(terms)}End"
+            terms.append(term)
+            statement = statement[:match.start()] + marker + statement[end:]
+            pos = match.start() + len(marker)
+        rendered = convert_fragment(statement, blank_terms=terms)
         parent.append("<statement>" + (rendered or "<p></p>") + "</statement>")
+        blanks = ""
+        if terms:
+            blanks = "<p><b>" + ("Missing term:" if len(terms) == 1 else "Missing terms, in order:") + "</b></p>"
+            blanks += convert_fragment("\\begin{enumerate}\n" + "\n".join(r"\item " + term for term in terms) + "\n\\end{enumerate}")
         solution = "".join(convert_fragment(a) for a in answers)
-        if not solution:
-            terms = []
-            for match in re.finditer(r"\\(?:fillin|shortanswer)\s*\{", tex):
-                value, _ = braced(tex, match.end() - 1)
-                terms.append(value)
-            solution = convert_fragment("\\begin{itemize}\n" + "\n".join(r"\item " + t for t in terms) + "\n\\end{itemize}") if terms else "<p>Work through the activity.</p>"
-        parent.append("<solution>" + solution + "</solution>")
+        parent.append("<solution>" + (blanks + solution or "<p>Work through the activity.</p>") + "</solution>")
     else:
-        parent.append(rendered)
+        parent.append(convert_fragment(statement))
         for a in answers: parent.append("<p><b>Answer:</b></p>" + convert_fragment(a))
 
 
