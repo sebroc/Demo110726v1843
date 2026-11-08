@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent
 SOURCE = OUT / "source"
 STRUCT = re.compile(r"\\(chaptertitle|sectiontitle|activity|theorem|definition|fact|note|remark|corollary|lemma)\b")
-ACTIVITY_END = "% pretext: end activity"
+BLOCK_END = re.compile(r"% pretext: end (?:activity|definition)")
 
 
 def braced(s, pos):
@@ -190,7 +190,7 @@ def build():
         )
         body = re.sub(
             r"(?<!\\)%[^\n]*",
-            lambda match: ACTIVITY_END if match[0].rstrip() == ACTIVITY_END else "",
+            lambda match: match[0].rstrip() if BLOCK_END.fullmatch(match[0].rstrip()) else "",
             body,
         )
         matches = list(STRUCT.finditer(body))
@@ -221,19 +221,19 @@ def build():
                 chunk = body[start:end]
                 label = re.match(r"\s*\\label\{([^}]+)\}", chunk)
                 if label: chunk = chunk[label.end():]
+                blocks = BLOCK_END.split(chunk, maxsplit=1)
+                chunk = blocks[0]
                 tag = kind if kind in ("activity", "theorem", "definition", "remark", "corollary", "lemma") else "remark"
                 if kind == "activity":
-                    chunk, _, following = chunk.partition(ACTIVITY_END)
                     lines.append(f'<activity xml:id="{html.escape(label.group(1) if label else f"ch{chapter}-activity-{count}")}">')
                     content(lines, chunk, activity=True)
-                    lines.append("</activity>")
-                    content(lines, following)
-                    continue
                 else:
                     lines.append(f'<{tag} xml:id="ch{chapter}-item-{count}"><statement>')
                     content(lines, chunk)
                     lines.append("</statement>")
                 lines.append(f"</{tag}>")
+                if len(blocks) == 2:
+                    content(lines, blocks[1])
         if opened: lines.append(f"</{opened}>")
         lines.append("</chapter>")
         (SOURCE / f"chapter-{chapter}.ptx").write_text("\n".join(lines))
